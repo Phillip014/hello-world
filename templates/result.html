@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>searchpage</title>
+    <style>
+		* {
+			box-sizing:border-box;
+		}
+		body {
+			margin:0;
+			padding:0;
+                        background:url("/static/resulti3.jpg");  
+                        background-position: center;
+                        background-repeat: no-repeat;
+                        background-attachment: fixed;
+                        background-size: 100% 100%;
+ 
+			font-weight:700;
+			font-family:"Microsoft YaHei","宋体","Segoe UI","Lucida Grande",Helvetica,Arial,sans-serif,FreeSans,Arimo;
+		}
+		#container {
+			width:100%;
+			height:50px;
+			margin:0 auto;s
+		}
+		div.search {
+			padding:10px 0;
+		}
+		form {
+			position:relative;
+			width:30%;
+			margin:0 auto;
+		}
+		input,button {
+			border:none;
+			outline:none;
+		}
+		.bar input {
+			width:100%;
+			height:42px;
+			padding-left:13px;
+			border:2px solid #54a0ff;
+			border-radius:5px;
+			background:transparent;
+			top:0;
+			left:0;
+		}
+		@media (max-width:1199px) {
+			form {
+			width:50%;
+		}
+		}@media (max-width:991px) {
+			form {
+			width:60%;
+		}
+		}@media (max-width:768px) {
+			form {
+			width:70%;
+		}
+		}.bar button {
+			height:42px;
+			width:100px;
+			cursor:pointer;
+			position:absolute;
+			background:#54a0ff; 
+			border-radius:0 5px 5px 0;
+			font-size:20px;
+			color:white;
+			text-align:center;
+			top:0;
+			right:0;
+		}
+		.bar button:hover {
+			background:#1e90ff;
+		}
+                div{ width:0px auto; height:0px auto; margin:30px; text-align:center}
+                div.dotted { border: 5px dotted #000000; }
+
+	</style>
+</head>
+<body>
+<h2>
+    {{ time }}
+</h2>
+<!--onsubmit="return search()"-->
+<div id="container">
+    <div class="search bar">
+        <form method = "POST">
+            {{ form }}
+            {% csrf_token %}
+            <!--<input autofocus="" id="search_input" class="search-txt" type="text">-->
+            <button id="btn" type="submit">Find</button>
+        </form>
+    </div>
+</div>
+<br>
+<h2><center><strong>{{ error }}</strong></center></h2>
+
+<div id="result">
+{% for row in result %}
+    <br>
+    <div class="dotted">
+    <center>
+        {% for i in row %}
+           {% if i in filename  %}
+               <a href = "/static/essay/{{ i }}">{{ i }}</a>
+           {% else  %}
+               <br>{{ i }}<br>
+           {% endif %}
+        {% endfor %}
+    </center>
+    </div>
+
+    <br>
+{% endfor %}
+</div>
+
+<script> 
+
+ function keyLight(id, key, bgColor){
+   var oDiv = document.getElementById(id),
+       sText = oDiv.innerHTML,
+       bgColor = bgColor || "orange",    
+       sKey = "<span style='background-color: "+bgColor+";'>"+key+"</span>",
+       num = -1,
+       rStr = new RegExp(key, "ig"),
+       rHtml = new RegExp("\<.*\>","ig"), //match html element
+       aHtml = sText.match(rHtml); //store html element
+   sText = sText.replace(rHtml, '{~}');  //replace html label
+   sText = sText.replace(rStr,sKey); //replace key
+   sText = sText.replace(/{~}/g,function(){  //replace html label
+     num++;
+     return aHtml[num];
+   });
+ 
+   oDiv.innerHTML = sText;
+ }
+ 
+ var key1 = keyLight('result', '{{ content }}','yellow')
+</script>
+</body>
+</html>
